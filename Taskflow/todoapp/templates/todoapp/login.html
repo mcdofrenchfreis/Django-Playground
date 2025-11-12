@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+
+{% block title %}Login - TaskFlow{% endblock %}
+
+{% block content %}
+<div style="min-height: calc(100vh - 200px); display: flex; align-items: center; justify-content: center; background: transparent; position: relative;">
+
+  <style>
+    .glass-container {
+      backdrop-filter: none;
+      background: #ffffff;
+      border: 1px solid #e5e5e5;
+      border-radius: 20px;
+      padding: 50px;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      position: relative;
+      z-index: 1;
+    }
+    
+    .glass-container h2 {
+      color: #333;
+      font-weight: 700;
+      font-size: 2rem;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    
+    .glass-container .subtitle {
+      color: #666;
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 0.95rem;
+    }
+    
+    .glass-container form {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .glass-container .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .glass-container label {
+      color: #333;
+      font-weight: 500;
+      margin-bottom: 8px;
+      display: block;
+      font-size: 0.95rem;
+    }
+    
+    .glass-container input[type="text"],
+    .glass-container input[type="email"],
+    .glass-container input[type="password"],
+    .glass-container textarea {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      background: #f9f9f9;
+      color: #333;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+    
+    .glass-container input[type="text"]::placeholder,
+    .glass-container input[type="email"]::placeholder,
+    .glass-container input[type="password"]::placeholder {
+      color: #999;
+    }
+    
+    .glass-container input[type="text"]:focus,
+    .glass-container input[type="email"]:focus,
+    .glass-container input[type="password"]:focus,
+    .glass-container textarea:focus {
+      outline: none;
+      background: #fff;
+      border-color: #667eea;
+      box-shadow: 0 0 15px rgba(102, 126, 234, 0.2);
+    }
+    
+    .glass-container ul {
+      list-style: none;
+      padding: 0;
+      margin: 10px 0;
+    }
+    
+    .glass-container li {
+      font-size: 0.85rem;
+      color: #666;
+      margin-bottom: 5px;
+    }
+    
+    .glass-container .helptext {
+      display: none;
+    }
+    
+    .glass-container .errorlist {
+      list-style: none;
+      padding: 10px;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 8px;
+      margin-bottom: 20px;
+      color: #dc2626;
+    }
+    
+    .glass-container button[type="submit"] {
+      padding: 14px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    .glass-container button[type="submit"]:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+    
+    .glass-container button[type="submit"]:active {
+      transform: translateY(0);
+    }
+    
+    .auth-link {
+      text-align: center;
+      margin-top: 20px;
+      color: #666;
+      font-size: 0.95rem;
+    }
+    
+    .auth-link a {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      border-bottom: 2px solid transparent;
+    }
+    
+    .auth-link a:hover {
+      border-bottom: 2px solid #667eea;
+    }
+  </style>
+
+  <div class="glass-container">
+    <h2>Welcome Back</h2>
+    <p class="subtitle">Sign in to your TaskFlow account</p>
+    
+    <form method="post">
+      {% csrf_token %}
+      
+      {% if form.non_field_errors %}
+        <div class="errorlist">
+          {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </div>
+      {% endif %}
+      
+      {% for field in form %}
+        <div class="form-group">
+          {% if field.label %}
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {% endif %}
+          {{ field }}
+          {% if field.errors %}
+            <ul class="errorlist">
+              {% for error in field.errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      {% endfor %}
+      
+      <button type="submit">Sign In</button>
+    </form>
+    
+    <div class="auth-link">
+      Don't have an account? <a href="{% url 'register' %}">Sign Up</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
