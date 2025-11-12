@@ -582,6 +582,21 @@ h1 {
     margin: 10px 0;
 }
 
+
+/* Responsive stats card: sticky on large screens, normal flow on small screens */
+.stats-card {
+    /* default: normal flow */
+    margin-top: 1rem; /* small-screen spacing */
+}
+
+@media (min-width: 992px) {
+    .stats-card {
+        position: -webkit-sticky; /* Safari */
+        position: sticky;
+        top: 6.5rem; /* offset to clear the page header/title — adjust if your header is taller/shorter */
+        margin-top: 0; /* spacing handled by top when sticky */
+    }
+}
 .glass-form-container li {
     font-size: 0.85rem;
     color: rgba(255, 255, 255, 0.7);
