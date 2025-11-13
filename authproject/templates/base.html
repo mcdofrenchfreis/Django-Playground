@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Auth Site{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" />
+    <script>
+      // Initialize theme from localStorage ASAP to avoid FOUC
+      (function() {
+        const saved = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = saved || (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
+  </head>
+  <body class="min-h-screen bg-base-200">
+    <div class="navbar bg-base-100 shadow">
+      <div class="container mx-auto px-4">
+        <div class="flex-1">
+          <a href="/" class="btn btn-ghost text-xl">Auth Site</a>
+        </div>
+        <div class="flex items-center gap-2">
+          {% if user.is_authenticated %}
+            <a class="btn btn-sm btn-ghost" href="{% url 'accounts:profile' %}">Profile</a>
+            <a class="btn btn-sm btn-ghost" href="{% url 'password_change' %}">Change Password</a>
+            <form method="post" action="{% url 'logout' %}" class="inline">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-primary">Logout</button>
+            </form>
+          {% else %}
+            <a class="btn btn-sm btn-ghost" href="{% url 'login' %}">Login</a>
+            <a class="btn btn-sm btn-primary" href="{% url 'accounts:signup' %}">Sign up</a>
+          {% endif %}
+
+          <label class="swap swap-rotate">
+            <input id="theme-toggle" type="checkbox" />
+            <svg class="swap-off h-6 w-6 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5.64 17.657A9 9 0 1118 6.343 7 7 0 005.64 17.657z"></path></svg>
+            <svg class="swap-on h-6 w-6 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.76 4.84l-1.8-1.79L3.17 4.84 4.96 6.62 6.76 4.84zm10.49 0l1.8-1.79 1.79 1.79-1.79 1.78-1.8-1.78zM12 2h0v3h0V2zm0 17h0v3h0v-3zM4.84 17.24l-1.79 1.8 1.79 1.79 1.78-1.79-1.78-1.8zM19.16 17.24l1.79 1.8-1.79 1.79-1.78-1.79 1.78-1.8zM22 12h-3v0h3v0zM5 12H2v0h3v0zM12 5a7 7 0 100 14 7 7 0 000-14z"></path></svg>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <main class="container mx-auto px-4 py-8">
+      {% if messages %}
+        <div class="mb-4 space-y-2">
+          {% for message in messages %}
+            <div class="alert {{ message.tags|default:'alert-info' }}">
+              <span>{{ message }}</span>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+      <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+          {% block content %}{% endblock %}
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer footer-center p-4 bg-base-100 text-base-content">
+      <aside>
+        <p>© {{ now|default:2025 }} Auth Site</p>
+      </aside>
+    </footer>
+
+    <script>
+      (function() {
+        const checkbox = document.getElementById('theme-toggle');
+        const current = document.documentElement.getAttribute('data-theme');
+        checkbox.checked = current === 'dark';
+        checkbox.addEventListener('change', function() {
+          const theme = this.checked ? 'dark' : 'light';
+          document.documentElement.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        });
+      })();
+    </script>
+  </body>
+</html>
