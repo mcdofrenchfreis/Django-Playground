@@ -37,6 +37,9 @@ body {
     backdrop-filter: blur(10px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.18);
     box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+    min-height: 64px;
+    display: flex;
+    align-items: center;
 }
 
 .navbar-brand {
@@ -46,15 +49,29 @@ body {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    display: flex;
+    align-items: center;
 }
 
-.navbar .nav-link {
+.navbar .navbar-nav {
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.navbar .nav-link,
+.navbar .btn {
     color: rgba(0, 0, 0, 0.6);
-    padding: 0.5rem 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    padding: 0 14px;
     border-radius: 10px;
     transition: all 0.2s ease-in-out;
     margin-left: 0.25rem;
     margin-right: 0.25rem;
+    line-height: 1;
+    font-size: 0.95rem;
 }
 
 .navbar .nav-link:hover {
@@ -77,6 +94,27 @@ body {
 .navbar .btn.btn-outline-secondary:hover {
     color: var(--primary-dark);
     border-color: rgba(16, 185, 129, 0.3);
+}
+
+/* Navbar badge and compound links alignment */
+.navbar .badge {
+    display: inline-flex;
+    align-items: center;
+    height: 20px;
+    padding: 0 8px;
+}
+
+/* Keep toggler aligned when visible (mobile only) */
+@media (max-width: 991.98px) {
+  .navbar .navbar-toggler {
+      display: flex; /* on mobile, ensure proper centering */
+      align-items: center;
+      justify-content: center;
+  }
+}
+
+.navbar .collapse.navbar-collapse {
+    align-items: center;
 }
 
 /* Glassmorphism Cards */

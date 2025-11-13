@@ -20,11 +20,19 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     {% url 'todo_list' as home_url %}
+                    {% url 'todo_all' as all_url %}
                     <li class="nav-item">
-                        <a class="nav-link {% if request.path == home_url %}active{% endif %}" href="{{ home_url }}">Home</a>
+                        <a class="nav-link btn btn-outline-secondary {% if request.path == home_url %}active{% endif %}" href="{{ home_url }}">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link btn btn-primary text-white ms-2" href="{% url 'todo_create' %}">+ New Task</a>
+                        <a class="nav-link btn btn-outline-secondary d-flex align-items-center {% if request.path == all_url %}active{% endif %}" href="{{ all_url }}">All Tasks
+                            {% if nav_task_count %}
+                                <span class="badge bg-light text-dark ms-2">{{ nav_task_count }}</span>
+                            {% endif %}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-secondary ms-2" href="{% url 'todo_create' %}">+ New Task</a>
                     </li>
                     {% if request.user.is_authenticated %}
                     <li class="nav-item d-flex align-items-center ms-2">

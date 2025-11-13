@@ -9,17 +9,60 @@ from django.contrib import messages
 
 
 def todo_list(request):
-    """Display all todos for the current user (or all if not authenticated)."""
+    """Display the main page showing a highlighted subset of todos for the current user."""
     if request.user.is_authenticated:
-        todos = Todo.objects.filter(owner=request.user)
+        user_todos = Todo.objects.filter(owner=request.user)
     else:
-        todos = Todo.objects.none()
-    completed_count = todos.filter(completed=True).count()
-    pending_count = todos.filter(completed=False).count()
+        user_todos = Todo.objects.none()
+
+    total_count = user_todos.count()
+    completed_count = user_todos.filter(completed=True).count()
+    pending_count = user_todos.filter(completed=False).count()
+
+    # Pick a small random highlighted subset for the main page
+    highlighted = user_todos.order_by('?')[:2]
+
     return render(request, 'todoapp/todo_list.html', {
-        'todos': todos,
+        'todos': highlighted,
+        'total_count': total_count,
         'completed_count': completed_count,
         'pending_count': pending_count,
+        'page_title': 'My Tasks',
+        'show_view_all': True,
+    })
+
+
+def todo_all(request):
+    """Display all todos for the current user (full list)."""
+    if request.user.is_authenticated:
+        todos_qs = Todo.objects.filter(owner=request.user).order_by('-created_at')
+    else:
+        todos_qs = Todo.objects.none()
+    completed_count = todos_qs.filter(completed=True).count()
+    pending_count = todos_qs.filter(completed=False).count()
+    total_count = todos_qs.count()
+
+    # Pagination
+    from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+    page = request.GET.get('page', 1)
+    paginator = Paginator(todos_qs, 10)  # 10 todos per page
+    try:
+        page_obj = paginator.page(page)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
+
+    return render(request, 'todoapp/todo_list.html', {
+        'todos': page_obj.object_list,
+        'page_obj': page_obj,
+        'paginator': paginator,
+        'is_paginated': paginator.num_pages > 1,
+        'total_count': total_count,
+        'completed_count': completed_count,
+        'pending_count': pending_count,
+        'page_title': 'All Tasks',
+        'show_view_all': False,
     })
 
 
